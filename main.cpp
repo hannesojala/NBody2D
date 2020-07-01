@@ -12,7 +12,7 @@
 #define HEIGHT 512
 #define PI 3.1415
 #define FPS 144
-#define G_CONST 0.025
+#define G_CONST 0.00025
 
 // TODO
 /*
@@ -25,6 +25,12 @@ REEEEEEE-FACTOR
 . Quadtree data struct
 . Distorted space?
 . Make camera follow COM
+
+EXPENSIVE THINGS
+. Collision Check - Use a faster way to check it
+. Gravity Force Calulation - Use a faster way to calculate it
+. Drawing - Unlikely to be fruitful.
+. cbrt(); Yikes
 
 */
 
@@ -50,9 +56,14 @@ public:
         y += yv;
     }
     void render(SDL_Renderer* renderer) {
+        SDL_SetRenderDrawColor(pRENDERER, 0xff, 0x00, 0xff, 0xff);
+        SDL_RenderDrawLine(pRENDERER, x, y, x+xv*10, y+yv*10);
+        SDL_SetRenderDrawColor(pRENDERER, 0x00, 0xff, 0xff, 0xff);
         draw_circle(renderer, x, y, (int) radius());
     }
-    float radius() { return sqrt(mass); }
+    float radius() {
+        return 0.1 * cbrt(mass) + 1;
+    }
     float x;
     float y;
     float xv;
@@ -72,16 +83,17 @@ int main(int argv, char** args) {
     list<body*> system;
     list<body*> trash;
 
-    body* sun = new body(5000.0, WIDTH/2, HEIGHT/2, 0, 0);
+    body* sun = new body(333000.0, WIDTH/2, HEIGHT/2, 0, 0);
     system.insert(system.begin(), sun);
     // Circle of Bodies
-    make_ring(sun, 250, 128, 10, system);
-    make_ring(sun, 225, 128, 5, system);
-    make_ring(sun, 200, 128, 2, system);
-    make_ring(sun, 175, 128, 1, system);
-    make_ring(sun, 150, 128, 1, system);
-    make_ring(sun, 125, 128, 1, system);
-    make_ring(sun, 100, 128, 1, system);
+    make_ring(sun, 160, 16, 1000, system);
+    make_ring(sun, 140, 512, 1, system);
+    make_ring(sun, 120, 128, 1, system);
+    make_ring(sun, 100, 64, 1, system);
+    make_ring(sun, 80, 32, 1, system);
+    make_ring(sun, 60, 16, 1, system);
+    make_ring(sun, 40, 8, 1, system);
+    make_ring(sun, 20, 4, 1, system);
 
     // LOOP
     SDL_Event event;
@@ -128,7 +140,7 @@ int main(int argv, char** args) {
                             trash.insert(trash.begin(), A);
                         }
                     } else {
-                        float force = G_CONST * (A->mass * B->mass) / pow( dist , 2);
+                        float force = G_CONST * (A->mass * B->mass) / (dist * dist);
                         A->xv += force * (xc/dist) / A->mass;
                         A->yv += force * (yc/dist) / A->mass;
                     }
@@ -164,13 +176,6 @@ int main(int argv, char** args) {
         cmx/=system.size();
         cmy/=system.size();
 
-        // total momentum trend
-        int txv = 0;
-        int tyv = 0;
-        for (auto b : system) {
-            txv += b->xv * b->mass;
-            tyv += b->yv * b->mass;
-        }
 
 
         // clear
@@ -179,7 +184,6 @@ int main(int argv, char** args) {
 
         // Render
         // system
-        SDL_SetRenderDrawColor(pRENDERER, 0x00, 0xff, 0xff, 0xff);
         for (auto B : system) {
             B->render(pRENDERER);
         }
@@ -187,9 +191,6 @@ int main(int argv, char** args) {
         // Center of mass indicator
         SDL_SetRenderDrawColor(pRENDERER, 0xff, 0xff, 0x00, 0xff);
         draw_circle(pRENDERER, cmx, cmy, 5.0);
-        // momentum indicator
-        SDL_SetRenderDrawColor(pRENDERER, 0xff, 0x00, 0xff, 0xff);
-        draw_circle(pRENDERER, txv + cmx, tyv + cmy, 5.0);
 
         SDL_SetWindowTitle(pWINDOW, to_string(system.size()).c_str());
 
