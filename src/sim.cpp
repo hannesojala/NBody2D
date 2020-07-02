@@ -137,7 +137,7 @@ void Sim::render() {
     // Trails. Above for no trails
     SDL_SetRenderDrawBlendMode(sim_Renderer, SDL_BLENDMODE_BLEND);
     SDL_Rect R = {0, 0, WIDTH, HEIGHT};
-    SDL_SetRenderDrawColor(sim_Renderer, 0x00, 0x00, 0x00, 0x11); // alpha must be a multiple of 0x11
+    SDL_SetRenderDrawColor(sim_Renderer, 0x00, 0x00, 0x00, 0x11); // leaves a "residue"
     SDL_RenderFillRect(sim_Renderer, &R);
 
     for (auto B : system) {

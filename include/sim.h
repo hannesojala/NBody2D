@@ -46,6 +46,10 @@ public:
     float xv;
     float yv;
     float mass;
+
+    // Hopefully temporary, may use SDL_gfx lib later
+    // Midpoint algorithm
+    // From https://stackoverflow.com/a/48291620
     void draw_circle(SDL_Renderer* renderer, int centreX, int centreY, int radius);
 };
 
@@ -82,10 +86,6 @@ private:
     void update_com();
 
     void make_ring(body* center, int radius, int amt, int mass, list<body*>& system);
-
-    // Hopefully temporary, may use SDL_gfx lib later
-    // Midpoint algorithm
-    // From https://stackoverflow.com/a/48291620
 };
 
 #endif // SIM_H
