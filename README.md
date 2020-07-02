@@ -6,4 +6,4 @@ Compile with usual flags for optimzation, yada yada.
 Make sure SDL2.dll is in prorgam directory and your environment is set up to find SDL.h and link properly and stuff.
 Help on that here: http://lazyfoo.net/tutorials/SDL/01_hello_SDL/index.php
 
-![alt text](https://github.com/hannesojala/NBody2/blob/master/image.jpg?raw=true)
+![alt text](image.jpg?raw=true)
