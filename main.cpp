@@ -1,6 +1,7 @@
 #include <memory>
 #include <iostream>
 #include <list>
+#include <map>
 #include <algorithm>
 #include <cmath>
 #include <chrono>
@@ -11,8 +12,8 @@
 #define WIDTH 512
 #define HEIGHT 512
 #define PI 3.1415
-#define FPS 144
-#define G_CONST 0.0005
+#define FPS 60
+#define G_CONST 0.00025
 
 // TODO
 /*
@@ -60,7 +61,9 @@ public:
         SDL_SetRenderDrawColor(pRENDERER, 0x00, 0xff, 0xff, 0xff);
         draw_circle(renderer, x, y, (int) radius());
     }
-    float radius() { // logarithmic lookup table - cbrt is ideal but slow
+    float radius() {
+        // logarithmic
+        /*
         if (mass <= 1) // = earth
             return 1;
         else if (mass < 10 )
@@ -72,10 +75,11 @@ public:
         else if (mass < 10000)
             return 4;
         else if (mass < 100000)
-            return 5;
-        else if (mass < 1000000)
             return 6;
-        else return log10(mass);
+        else if (mass < 1000000)
+            return 8;
+        else return cbrt(mass/100);*/
+        return 1 + cbrt(mass/100);
     }
     float x;
     float y;
@@ -96,21 +100,24 @@ int main(int argv, char** args) {
     list<body*> system;
     list<body*> trash;
 
-    body* sun = new body(1000000.0, WIDTH/2, HEIGHT/2, 0, 0);
+    body* sun = new body(3330000.0, WIDTH/2, HEIGHT/2, 0, 0);
     system.insert(system.begin(), sun);
     // Circle of Bodies
-    make_ring(sun,  80, 128, 1, system);
-    make_ring(sun,  75, 128, 1, system);
-    make_ring(sun,  70, 128, 1, system);
-    make_ring(sun,  65, 128, 1, system);
-    make_ring(sun,  60, 128, 1, system);
-    make_ring(sun,  55, 128, 1, system);
-    make_ring(sun,  50, 128, 1, system);
-    make_ring(sun,  45, 128, 1, system);
-    make_ring(sun,  40,  64, 1, system);
-    make_ring(sun,  35,  64, 1, system);
-    make_ring(sun,  30,  64, 1, system);
-    make_ring(sun,  25,  64, 1, system);
+    make_ring(sun, 130, 16, 1000, system);
+    make_ring(sun, 120, 128, 1, system);
+
+    make_ring(sun,  80, 32,1, system);
+    make_ring(sun,  75, 32, 1, system);
+    make_ring(sun,  70, 32, 1, system);
+    make_ring(sun,  65, 32, 1, system);
+    make_ring(sun,  60, 32, 1, system);
+    make_ring(sun,  55, 32, 1, system);
+    make_ring(sun,  50, 32, 1, system);
+    make_ring(sun,  45, 32, 1, system);
+    make_ring(sun,  40, 32,1, system);
+    make_ring(sun,  35, 32, 1, system);
+    make_ring(sun,  30, 32, 1, system);
+    make_ring(sun,  25, 32, 1, system);
 
     // LOOP
     SDL_Event event;
@@ -127,7 +134,7 @@ int main(int argv, char** args) {
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 SDL_GetMouseState(&mx, &my);
-                body* bod = new body(10.0, mx, my, 0, 0);
+                body* bod = new body(100.0, mx, my, 0, 0);
                 system.insert(system.begin(), bod);
                 break;
             }
