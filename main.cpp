@@ -57,7 +57,7 @@ public:
     }
     void render(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(pRENDERER, 0xff, 0x00, 0xff, 0xff);
-        if (mass > 9) SDL_RenderDrawLine(pRENDERER, x, y, x+xv*5, y+yv*5);
+        if (mass >= 100) SDL_RenderDrawLine(pRENDERER, x, y, x+xv*5, y+yv*5);
         SDL_SetRenderDrawColor(pRENDERER, 0x00, 0xff, 0xff, 0xff);
         draw_circle(renderer, x, y, (int) radius());
     }
@@ -100,24 +100,24 @@ int main(int argv, char** args) {
     list<body*> system;
     list<body*> trash;
 
-    body* sun = new body(3330000.0, WIDTH/2, HEIGHT/2, 0, 0);
+    body* sun = new body(333000.0, WIDTH/2, HEIGHT/2, 0, 0);
     system.insert(system.begin(), sun);
     // Circle of Bodies
     make_ring(sun, 130, 16, 1000, system);
     make_ring(sun, 120, 128, 1, system);
 
-    make_ring(sun,  80, 32,1, system);
-    make_ring(sun,  75, 32, 1, system);
-    make_ring(sun,  70, 32, 1, system);
-    make_ring(sun,  65, 32, 1, system);
-    make_ring(sun,  60, 32, 1, system);
-    make_ring(sun,  55, 32, 1, system);
-    make_ring(sun,  50, 32, 1, system);
-    make_ring(sun,  45, 32, 1, system);
-    make_ring(sun,  40, 32,1, system);
-    make_ring(sun,  35, 32, 1, system);
-    make_ring(sun,  30, 32, 1, system);
-    make_ring(sun,  25, 32, 1, system);
+    make_ring(sun,  80, 32, 10, system);
+    make_ring(sun,  75, 32, 10, system);
+    make_ring(sun,  70, 32, 10, system);
+    make_ring(sun,  65, 32, 10, system);
+    make_ring(sun,  60, 32, 10, system);
+    make_ring(sun,  55, 32, 10, system);
+    make_ring(sun,  50, 32, 10, system);
+    make_ring(sun,  45, 32, 10, system);
+    make_ring(sun,  40, 32, 10, system);
+    make_ring(sun,  35, 32, 10, system);
+    make_ring(sun,  30, 32, 10, system);
+    make_ring(sun,  25, 32, 10, system);
 
     // LOOP
     SDL_Event event;
