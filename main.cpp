@@ -12,7 +12,7 @@
 #define HEIGHT 512
 #define PI 3.1415
 #define FPS 144
-#define G_CONST 0.00025
+#define G_CONST 0.0005
 
 // TODO
 /*
@@ -20,10 +20,8 @@
 REEEEEEE-FACTOR
 
 . Change vector of ptr to vector of smart ptr
-. (something about collisions)
 . High energy collisions result in mergers, low energy are elastic
 . Quadtree data struct
-. Distorted space?
 . Make camera follow COM
 
 EXPENSIVE THINGS
@@ -31,6 +29,7 @@ EXPENSIVE THINGS
 . Gravity Force Calulation - Use a faster way to calculate it
 . Drawing - Unlikely to be fruitful.
 . cbrt(); Yikes
+. List may not be the best for anything but trashing old bodies
 
 */
 
@@ -57,12 +56,26 @@ public:
     }
     void render(SDL_Renderer* renderer) {
         SDL_SetRenderDrawColor(pRENDERER, 0xff, 0x00, 0xff, 0xff);
-        SDL_RenderDrawLine(pRENDERER, x, y, x+xv*10, y+yv*10);
+        if (mass > 9) SDL_RenderDrawLine(pRENDERER, x, y, x+xv*5, y+yv*5);
         SDL_SetRenderDrawColor(pRENDERER, 0x00, 0xff, 0xff, 0xff);
         draw_circle(renderer, x, y, (int) radius());
     }
-    float radius() {
-        return 0.1 * cbrt(mass) + 1;
+    float radius() { // logarithmic lookup table - cbrt is ideal but slow
+        if (mass <= 1) // = earth
+            return 1;
+        else if (mass < 10 )
+            return 1;   // 10 E
+        else if (mass < 100)
+            return 2;
+        else if (mass < 1000)
+            return 3;
+        else if (mass < 10000)
+            return 4;
+        else if (mass < 100000)
+            return 5;
+        else if (mass < 1000000)
+            return 6;
+        else return log10(mass);
     }
     float x;
     float y;
@@ -83,17 +96,21 @@ int main(int argv, char** args) {
     list<body*> system;
     list<body*> trash;
 
-    body* sun = new body(333000.0, WIDTH/2, HEIGHT/2, 0, 0);
+    body* sun = new body(1000000.0, WIDTH/2, HEIGHT/2, 0, 0);
     system.insert(system.begin(), sun);
     // Circle of Bodies
-    make_ring(sun, 160, 16, 1000, system);
-    make_ring(sun, 140, 512, 1, system);
-    make_ring(sun, 120, 128, 1, system);
-    make_ring(sun, 100, 64, 1, system);
-    make_ring(sun, 80, 32, 1, system);
-    make_ring(sun, 60, 16, 1, system);
-    make_ring(sun, 40, 8, 1, system);
-    make_ring(sun, 20, 4, 1, system);
+    make_ring(sun,  80, 128, 1, system);
+    make_ring(sun,  75, 128, 1, system);
+    make_ring(sun,  70, 128, 1, system);
+    make_ring(sun,  65, 128, 1, system);
+    make_ring(sun,  60, 128, 1, system);
+    make_ring(sun,  55, 128, 1, system);
+    make_ring(sun,  50, 128, 1, system);
+    make_ring(sun,  45, 128, 1, system);
+    make_ring(sun,  40,  64, 1, system);
+    make_ring(sun,  35,  64, 1, system);
+    make_ring(sun,  30,  64, 1, system);
+    make_ring(sun,  25,  64, 1, system);
 
     // LOOP
     SDL_Event event;
@@ -169,12 +186,14 @@ int main(int argv, char** args) {
         // center of mass
         int cmx = 0;
         int cmy = 0;
+        float total_mass = 0;
         for (auto b : system) {
-            cmx += b->x;
-            cmy += b->y;
+            total_mass += b->mass;
+            cmx += b->x * b->mass;
+            cmy += b->y * b->mass;
         }
-        cmx/=system.size();
-        cmy/=system.size();
+        cmx/=total_mass;
+        cmy/=total_mass;
 
 
 
@@ -190,7 +209,7 @@ int main(int argv, char** args) {
 
         // Center of mass indicator
         SDL_SetRenderDrawColor(pRENDERER, 0xff, 0xff, 0x00, 0xff);
-        draw_circle(pRENDERER, cmx, cmy, 5.0);
+        draw_circle(pRENDERER, cmx, cmy, 2.0);
 
         SDL_SetWindowTitle(pWINDOW, to_string(system.size()).c_str());
 
