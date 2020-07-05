@@ -2,7 +2,8 @@
 #include <chrono>
 #include <thread>
 
-int main(int argv, char** args) {
+int main(int argc, char** argv) {
+
     const int FPS = 60;
     Sim sim;
     while (sim.running) {

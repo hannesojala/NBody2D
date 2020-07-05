@@ -1,10 +1,9 @@
 #include "sim.h"
 
-Sim::Sim()
+Sim::Sim() : running(true)
 {
     init_SDL();
     init_sim();
-    running = true;
 }
 
 Sim::~Sim()
@@ -147,11 +146,14 @@ void Sim::render() {
 void Sim::make_ring(body* center, int radius, int amt, int mass, std::list<body*>& system) {
     for (int i = 0; i < amt; i++) {
         float ipi = i * 2 * PI / amt;
-        body* pbod = new body(mass,
-          center->x + sin(ipi) * radius,
-          center->y + cos(ipi) * radius,
-          -cos(ipi) * sqrt(G_CONST * center->mass/radius),
-          sin(ipi) * sqrt(G_CONST * center->mass/radius));
+        body* pbod = new body
+        (
+            mass,
+            center->x + sin(ipi) * radius,
+            center->y + cos(ipi) * radius,
+            -cos(ipi) * sqrt(G_CONST * center->mass/radius),
+            sin(ipi) * sqrt(G_CONST * center->mass/radius)
+        );
         system.insert(system.begin(), pbod);
     }
 }

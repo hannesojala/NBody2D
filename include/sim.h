@@ -12,6 +12,10 @@ class Sim
 
 public:
     Sim();
+    // Forbid Copy and Assignment
+    Sim(const Sim&) = delete;
+    operator=(const Sim&) = delete;
+
     virtual ~Sim();
 
     void events();
