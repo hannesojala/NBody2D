@@ -51,7 +51,8 @@ void Sim::init_sim() {
 }
 
 void Sim::events() {
-    int mouse_x, mouse_y;
+    static int mouse_down_x = 0, mouse_down_y = 0;
+    static int mouse_up_x = 0, mouse_up_y = 0;
     // Event Polling loop
     while (SDL_PollEvent(&event) != 0) {
         switch (event.type) {
@@ -62,10 +63,29 @@ void Sim::events() {
             break;
         // Any mouse button
         case SDL_MOUSEBUTTONDOWN:
-            // Create a small body at the mouse cursor
-            SDL_GetMouseState(&mouse_x, &mouse_y);
-            body* bod = new body(100.0, mouse_x, mouse_y, 0, 0);
-            system.insert(system.begin(), bod);
+            switch (event.button.button) {
+            case SDL_BUTTON_LEFT:
+                SDL_GetMouseState(&mouse_down_x, &mouse_down_y);
+                break;
+            }
+
+            break;
+
+        case SDL_MOUSEBUTTONUP:
+            switch (event.button.button) {
+            case SDL_BUTTON_LEFT:
+                // Create a small body at the old mouse cursor position
+                // with velocity equal to 8 times the portion of the window traversed during mouse click
+                SDL_GetMouseState(&mouse_up_x, &mouse_up_y);
+                // todo: remove magic numbers
+                body* bod = new body(100.0, mouse_down_x, mouse_down_y, 8 * (mouse_up_x - mouse_down_x)/sim_Width, 8 * (mouse_up_y - mouse_down_y)/sim_Height);
+                system.insert(system.begin(), bod);
+                mouse_down_x = 0;
+                mouse_down_y = 0;
+                mouse_up_x = 0;
+                mouse_up_y = 0;
+                break;
+            }
             break;
         }
     }
