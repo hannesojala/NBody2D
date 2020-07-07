@@ -14,8 +14,7 @@ public:
     void render(SDL_Renderer* renderer);
 
 private:
-    float radius() { return 1 + cbrt(mass/100); } // examine. member variable instead? variable mass? on-fly impact? ctor initialization?
-
+    float radius() { return 1 + cbrt(abs(mass)/100); }
     float mass;
     float x;
     float y;

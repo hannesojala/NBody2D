@@ -53,6 +53,7 @@ void Sim::init_sim() {
 void Sim::events() {
     static int mouse_down_x = 0, mouse_down_y = 0;
     static int mouse_up_x = 0, mouse_up_y = 0;
+    static int place_mass = 100;
     // Event Polling loop
     while (SDL_PollEvent(&event) != 0) {
         switch (event.type) {
@@ -60,6 +61,10 @@ void Sim::events() {
         case SDL_QUIT:
             // Quit
             running = false;
+            break;
+        case SDL_MOUSEWHEEL:
+            // Quit
+            place_mass += 100 * event.wheel.y;
             break;
         // Any mouse button
         case SDL_MOUSEBUTTONDOWN:
@@ -78,7 +83,7 @@ void Sim::events() {
                 // with velocity equal to 8 times the portion of the window traversed during mouse click
                 SDL_GetMouseState(&mouse_up_x, &mouse_up_y);
                 // todo: remove magic numbers
-                body* bod = new body(100.0, mouse_down_x, mouse_down_y, 8 * (float)(mouse_up_x - mouse_down_x)/sim_Width, 8 * (float)(mouse_up_y - mouse_down_y)/sim_Height);
+                body* bod = new body((float) place_mass, mouse_down_x, mouse_down_y, 8 * (float)(mouse_up_x - mouse_down_x)/sim_Width, 8 * (float)(mouse_up_y - mouse_down_y)/sim_Height);
                 system.insert(system.begin(), bod);
                 mouse_down_x = 0;
                 mouse_down_y = 0;
@@ -125,7 +130,7 @@ void Sim::interact(body* A, body* B) {
 
 void Sim::collide(body* A, body* B) {
     // More massive body absorbs the less massive
-    if (A->mass > B->mass) {
+    if (abs(A->mass) > abs(B->mass)) {
         A->xv = (A->mass * A->xv + B->mass * B->xv)/(A->mass + B->mass);
         A->yv = (A->mass * A->yv + B->mass * B->yv)/(A->mass + B->mass);
         A->mass += B->mass;
