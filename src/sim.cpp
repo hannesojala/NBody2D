@@ -78,7 +78,7 @@ void Sim::events() {
                 // with velocity equal to 8 times the portion of the window traversed during mouse click
                 SDL_GetMouseState(&mouse_up_x, &mouse_up_y);
                 // todo: remove magic numbers
-                body* bod = new body(100.0, mouse_down_x, mouse_down_y, 8 * (mouse_up_x - mouse_down_x)/sim_Width, 8 * (mouse_up_y - mouse_down_y)/sim_Height);
+                body* bod = new body(100.0, mouse_down_x, mouse_down_y, 8 * (float)(mouse_up_x - mouse_down_x)/sim_Width, 8 * (float)(mouse_up_y - mouse_down_y)/sim_Height);
                 system.insert(system.begin(), bod);
                 mouse_down_x = 0;
                 mouse_down_y = 0;
