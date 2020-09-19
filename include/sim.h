@@ -1,7 +1,7 @@
 #ifndef SIM_H
 #define SIM_H
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <list>
 #include <cmath>
 #include <iostream>
@@ -14,7 +14,7 @@ public:
     Sim();
     // Forbid Copy and Assignment
     Sim(const Sim&) = delete;
-    operator=(const Sim&) = delete;
+    Sim operator=(const Sim&) = delete;
 
     virtual ~Sim();
 
