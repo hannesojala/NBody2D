@@ -3,6 +3,7 @@
 
 #include "SDL2/SDL.h"
 #include <cmath>
+#include <cstdlib>
 
 class body {
 
@@ -21,10 +22,15 @@ private:
     float xv;
     float yv;
 
-    // Hopefully temporary, may use SDL_gfx lib later
+    int surface_seed;
+
+    // Temporary
     // Midpoint algorithm
     // From https://stackoverflow.com/a/48291620
     void draw_circle(SDL_Renderer* renderer, int centreX, int centreY, int radius);
+
+    // Broken
+    void draw_circle_displaced(SDL_Renderer* renderer, int centerX, int centerY, int radius);
 };
 
 #endif // BODY_H

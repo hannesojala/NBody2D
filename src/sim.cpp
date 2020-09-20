@@ -170,7 +170,7 @@ void Sim::render() {
 
 void Sim::make_ring(body* center, int radius, int amt, int mass, std::list<body*>& system) {
     for (int i = 0; i < amt; i++) {
-        float ipi = i * 2 * PI / amt;
+        float ipi = i * 2 * 3.1415 / amt;
         body* pbod = new body
         (
             mass,

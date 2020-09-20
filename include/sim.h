@@ -22,14 +22,13 @@ public:
     void update();
     void render();
 
-    const int sim_Width = 512;
-    const int sim_Height = 512;
+    const int sim_Width = 1280;
+    const int sim_Height = 720;
 
     bool running;
 
 private:
 
-    const float PI = 3.1415;
     const double G_CONST = 0.00025;
 
 
