@@ -11,7 +11,7 @@ class Sim
 {
 
 public:
-    Sim();
+    Sim(unsigned int width, unsigned int height);
     // Forbid Copy and Assignment
     Sim(const Sim&) = delete;
     Sim operator=(const Sim&) = delete;
@@ -22,8 +22,8 @@ public:
     void update();
     void render();
 
-    const int sim_Width = 1280;
-    const int sim_Height = 720;
+    unsigned int sim_Width;
+    unsigned int sim_Height;
 
     bool running;
 

@@ -1,6 +1,6 @@
 #include "sim.h"
 
-Sim::Sim() : running(true)
+Sim::Sim(unsigned int width, unsigned int height) : sim_Width(width), sim_Height(height), running(true)
 {
     init_SDL();
     init_sim();
@@ -55,7 +55,7 @@ void Sim::events() {
     static int mouse_up_x = 0, mouse_up_y = 0;
     static int place_mass = 100;
     // Event Polling loop
-    while (SDL_PollEvent(&event) != 0) {
+    while (SDL_PollEvent(&event)) {
         switch (event.type) {
         // Window 'X'
         case SDL_QUIT:

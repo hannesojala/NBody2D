@@ -5,7 +5,7 @@ BIN     := bin
 SRC     := src
 INCLUDE := include
 LIB     := lib
-LIBRARIES   := -lSDL2 -lSDL2_gfx
+LIBRARIES   := -lSDL2
 EXECUTABLE  := NBody2D
 
 
